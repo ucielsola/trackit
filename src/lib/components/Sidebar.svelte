@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getAuthService } from '$lib/services/authService';
+	import { getAppState } from '$lib/state';
 	import { Sparkles, FolderOpenDot, LogOut, Settings, Users } from '@lucide/svelte';
 
 	let route = $derived(page.route.id || '');
+	const appState = getAppState();
+
+	let user = $derived(appState.user);
+
+	$inspect(user)
 
 	const logout = () => {
-		const auth = getAuthService();
-		auth.logout();
+		appState.logout();
 	};
 </script>
 

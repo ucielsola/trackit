@@ -1,18 +1,21 @@
-import { getContext, setContext } from 'svelte';
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
-import { createBrowserClient } from '@supabase/ssr';
-import { type SupabaseClient } from '@supabase/supabase-js';
 import { goto } from '$app/navigation';
+import { getContext, setContext } from 'svelte';
+import type { SupabaseClient, User } from '@supabase/supabase-js';
 
-class AuthService {
+class AppState {
 	#supabase: SupabaseClient;
+	#user: User | null = $state(null);
 
-	constructor() {
-		this.#supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+	get user() {
+		return this.#user;
 	}
 
-	get client() {
-		return this.#supabase;
+	constructor(supabase: SupabaseClient) {
+		this.#supabase = supabase;
+	}
+
+	public setUser(user: User | null) {
+		this.#user = user;
 	}
 
 	async sendOtp(email: string): Promise<string | null> {
@@ -50,14 +53,12 @@ class AuthService {
 	}
 }
 
-const KEY = Symbol('authService');
+const KEY = Symbol('appState');
 
-export const setAuthService = () => {
-	const auth = new AuthService();
-	setContext<AuthService>(KEY, auth);
-	return auth;
+export const createAppState = (supabase: SupabaseClient) => {
+	return setContext<AppState>(KEY, new AppState(supabase));
 };
 
-export const getAuthService = (): AuthService => {
-	return getContext<AuthService>(KEY);
+export const getAppState = (): ReturnType<typeof createAppState> => {
+	return getContext<AppState>(KEY);
 };

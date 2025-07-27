@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getAuthService } from '$lib/services/authService';
+	import { getAppState } from '$lib/state/appState.svelte';
 
 	let email = '';
 	let otp = '';
@@ -8,18 +8,18 @@
 	let loading = false;
 	let error: string | null = null;
 
-	const auth = getAuthService();
+	const appState = getAppState();
 
 	const sendOtp = async () => {
 		loading = true;
-		error = await auth.sendOtp(email);
+		error = await appState.sendOtp(email);
 		otpSent = !error;
 		loading = false;
 	};
 
 	const verifyOtp = async () => {
 		loading = true;
-		error = await auth.verifyOtp(email, otp);
+		error = await appState.verifyOtp(email, otp);
 		if (!error) goto('/private');
 		loading = false;
 	};

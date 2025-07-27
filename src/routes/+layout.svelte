@@ -2,12 +2,16 @@
 	import '../app.css';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { setAuthService } from '$lib/services/authService';
+	import { initializeApp } from '$lib/initializeApp';
+	import { getAppState } from '$lib/state';
 
 	let { data, children } = $props();
 	let { session, supabase } = $derived(data);
 
-	setAuthService();
+	initializeApp();
+	const appState = getAppState();
+
+	appState.setUser(data.session?.user ?? null);
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
