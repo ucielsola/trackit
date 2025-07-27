@@ -1,118 +1,38 @@
-# 🧾 PRD — Personal Time Tracker with AI Enrichment
+# sv
 
-## 🧠 Summary
-Personal web application built with **SvelteKit + daisyUI + OpenRouter + Vercel** for tracking billable tasks, managing payment status, generating printable invoices, and enhancing task descriptions with AI. Includes a monthly summary powered by LLMs, with smart caching.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
----
+## Creating a project
 
-## 🎯 Goals
+If you're seeing this, you've probably already done this step. Congrats!
 
-- Register clients, projects, and time entries (tasks).
-- Set hourly rates per project.
-- Mark tasks as billable or not.
-- Track whether each entry has been paid.
-- Filter, list, and export data.
-- Generate printable invoices by project and date range.
-- Use AI to enhance task descriptions.
-- Display cached smart monthly summaries.
+```sh
+# create a new project in the current directory
+npx sv create
 
----
+# create a new project in my-app
+npx sv create my-app
+```
 
-## 🧱 Data Model (Logical Structure)
+## Developing
 
-### Client
-- `id: string`
-- `name: string`
-- `email?: string`
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-### Project
-- `id: string`
-- `name: string`
-- `clientId: string`
-- `hourRate: number`
+```sh
+npm run dev
 
-### Entry
-- `id: string`
-- `date: Date`
-- `projectId: string`
-- `description: string`
-- `hours: number`
-- `paymentStatus: "PENDING" | "PAID"`
-- `billable: boolean` (default: `true`)
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-### MonthlySummary
-- `id: string` (format: `YYYY-MM`)
-- `summary: string`
-- `checksum: string`
-- `generatedAt: Date`
+## Building
 
----
+To create a production version of your app:
 
-## 🔄 Core Flows
+```sh
+npm run build
+```
 
-### Create client
-- Input: name, optional email
+You can preview the production build with `npm run preview`.
 
-### Create project
-- Inputs: name, client selection, hourly rate
-
-### Create time entry
-- Inputs:
-  - Project
-  - Brief description
-  - Duration (manual input or via timer)
-  - "Billable" checkbox (default: checked)
-
-### Enrich description (AI)
-- Magic wand button (`🪄`) next to input
-- Calls OpenAI to rewrite short text into clear, professional description
-
-### Generate invoice
-- Modal form:
-  - Select project
-  - Date range
-  - Invoice number
-  - Due date
-- Redirects to dynamic preview page with:
-  - Client/project info
-  - Task table (billable + pending only)
-  - Totals
-  - Print/export button
-
----
-
-## 📊 Monthly Summary with AI
-
-- Natural language summary of activity during a given month
-- Includes hours worked, projects, payment status, and estimated income
-- Generated with GPT (LLM)
-- Cached using a `checksum` based on relevant entries
-- Only regenerates when data changes
-
----
-
-## ✅ AI Features
-
-### 1. Enrich task description
-- Uses LLM to rewrite short or vague task descriptions
-- Prompt: friendly, clear, professional, freelancer tone
-
-### 2. Monthly summary generation
-- LLM-generated overview of the month’s work
-- Uses `sha256` hash of all relevant time entries to determine if regeneration is needed
-
----
-
-## 💻 Tech Stack
-
-- **Frontend**: SvelteKit + Tailwind CSS + daisyUI
-- **Backend / DB**: SQLite (optionally Redis or Supabase)
-- **AI API**: OpenAI (GPT-3.5-turbo or Instruct)
-
----
-
-## 📌 Notes
-
-- Single-user personal app (no auth needed for now)
-- Could expand to multi-user in the future
-- Designed to be fast, offline-capable, and portable
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
