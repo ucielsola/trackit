@@ -2,6 +2,7 @@ import { getContext, setContext } from 'svelte';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import { createBrowserClient } from '@supabase/ssr';
 import { type SupabaseClient } from '@supabase/supabase-js';
+import { goto } from '$app/navigation';
 
 class AuthService {
 	#supabase: SupabaseClient;
@@ -41,6 +42,11 @@ class AuthService {
 
 		if (!session) return 'Login successful but session not ready. Please try again.';
 		return null;
+	}
+
+	async logout(redirectTo: string = '/auth') {
+		await this.#supabase.auth.signOut();
+		goto(redirectTo);
 	}
 }
 

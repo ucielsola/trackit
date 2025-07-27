@@ -43,6 +43,9 @@
 			/>
 		</div>
 		<button class="btn w-full btn-primary" onclick={sendOtp} disabled={loading}>
+			{#if loading}
+				<span class="loading loading-spinner"></span>
+			{/if}
 			{loading ? 'Sending...' : 'Send OTP'}
 		</button>
 	{:else}
@@ -62,6 +65,9 @@
 			/>
 		</div>
 		<button class="btn w-full btn-success" onclick={verifyOtp} disabled={loading}>
+			{#if loading}
+				<span class="loading loading-spinner"></span>
+			{/if}
 			{loading ? 'Verifying...' : 'Verify OTP'}
 		</button>
 	{/if}
