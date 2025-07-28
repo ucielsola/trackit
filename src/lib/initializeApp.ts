@@ -1,14 +1,14 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { createProjectsState } from './state/projectsState.svelte';
-import { createAppState } from '$lib/state';
+import { createAppState, createClientsState, createProjectsState } from '$lib/state';
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const initializeApp = () => {
 	const initializers: ((supabase: SupabaseClient) => void)[] = [
-		createProjectsState,
-		createAppState
+		createAppState,
+		createClientsState,
+		createProjectsState
 	];
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
