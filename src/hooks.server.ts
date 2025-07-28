@@ -3,6 +3,7 @@ import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { themes } from '$lib/data/themes';
 
 const supabase: Handle = async ({ event, resolve }) => {
 	/**
@@ -62,6 +63,32 @@ const supabase: Handle = async ({ event, resolve }) => {
 	});
 };
 
+export const colorThemeHandle: Handle = async ({ event, resolve }) => {
+	const cookieTheme = event.cookies.get('color-theme') ?? '';
+	const prefersDark = event.request.headers.get('sec-ch-prefers-color-theme') === 'dark';
+
+	const isValidTheme = (t: string | null): t is string => !!t && themes.includes(t);
+	const chosenColorTheme = isValidTheme(cookieTheme) ? cookieTheme : prefersDark ? 'dark' : 'light';
+
+	event.locals.colorTheme = chosenColorTheme;
+
+	if (!isValidTheme(cookieTheme)) {
+		event.cookies.set('color-theme', chosenColorTheme, {
+			path: '/',
+			sameSite: 'strict',
+			secure: true,
+			maxAge: 60 * 60 * 24 * 30
+		});
+	}
+
+	return resolve(event, {
+		transformPageChunk: ({ html }) =>
+			html
+				.replace(/(<html[^>]*?)data-theme="[^"]*"/, `$1data-theme="${chosenColorTheme}"`)
+				.replace(/<html((?!data-theme)[^>]*)>/, `<html$1 data-theme="${chosenColorTheme}">`)
+	});
+};
+
 const authGuard: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession();
 	event.locals.session = session;
@@ -69,26 +96,27 @@ const authGuard: Handle = async ({ event, resolve }) => {
 
 	const path = event.url.pathname.replace(/\/+$/, '') || '/';
 
-	const isPublic = path === '/auth';
-	const isProtected = !isPublic;
+	const isAuthPage = path === '/auth';
+	const isPrivatePage = path.startsWith('/private');
+	const isApiRoute = path.startsWith('/api/');
+	const isProtectedApi = path.startsWith('/api/private/');
 
-	console.log({
-		path,
-		isPublic,
-		isProtected,
-		session,
-		user
-	})
+	// 1. Rutas públicas de API → siempre pasan
+	if (isApiRoute && !isProtectedApi) {
+		return resolve(event);
+	}
 
-	if (!session && isProtected) {
+	// 2. Rutas privadas (páginas o API protegidas) → requieren sesión
+	if (!session && (isPrivatePage || isProtectedApi)) {
 		throw redirect(303, '/auth');
 	}
 
-	if (session && isPublic) {
+	// 3. Redirección: usuario autenticado que entra a página pública
+	if (session && !isPrivatePage && !isAuthPage && !isApiRoute) {
 		throw redirect(303, '/private');
 	}
 
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(supabase, authGuard);
+export const handle: Handle = sequence(colorThemeHandle, supabase, authGuard);

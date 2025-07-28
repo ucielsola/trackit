@@ -51,6 +51,21 @@ class AppState {
 		await this.#supabase.auth.signOut();
 		goto(redirectTo);
 	}
+
+	setTheme(theme: string) {
+		document.documentElement.setAttribute('data-theme', theme);
+
+		fetch('/api/set-theme', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ 'color-theme': theme })
+		})
+			.then((res) => res.json())
+			.then((data) => console.log('Set theme result:', data))
+			.catch((err) => console.error('Failed to set theme', err));
+	}
 }
 
 const KEY = Symbol('appState');
