@@ -12,6 +12,7 @@
 	const appState = getAppState();
 
 	appState.setUser(data.session?.user ?? null);
+	appState.setTheme(data.cookies.find((cookie) => cookie.name === 'color-theme')?.value ?? 'light');
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {

@@ -6,7 +6,7 @@
 <div class="flex h-dvh overflow-hidden">
 	<Sidebar />
 
-	<main class="flex-1 overflow-y-auto p-6">
+	<main class="flex-1 overflow-y-auto">
 		{@render children()}
 	</main>
 </div>

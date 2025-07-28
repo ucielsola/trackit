@@ -5,9 +5,14 @@ import type { SupabaseClient, User } from '@supabase/supabase-js';
 class AppState {
 	#supabase: SupabaseClient;
 	#user: User | null = $state(null);
+	#theme: string = $state('light');
 
 	get user() {
 		return this.#user;
+	}
+
+	get theme() {
+		return this.#theme;
 	}
 
 	constructor(supabase: SupabaseClient) {
@@ -52,7 +57,13 @@ class AppState {
 		goto(redirectTo);
 	}
 
+
 	setTheme(theme: string) {
+		this.#theme = theme;
+	}
+
+	updateTheme(theme: string) {
+		this.#theme = theme;
 		document.documentElement.setAttribute('data-theme', theme);
 
 		fetch('/api/set-theme', {
