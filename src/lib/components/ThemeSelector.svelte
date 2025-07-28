@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronDown } from '@lucide/svelte';
+	import { Check, ChevronDown } from '@lucide/svelte';
 	import { getAppState } from '$lib/state';
 	import { themes } from '$lib/data/themes';
 
@@ -7,6 +7,7 @@
 
 	const onSetTheme = (theme: (typeof themes)[number]) => {
 		appState.setTheme(theme);
+		(document.activeElement as HTMLElement)?.blur();
 	};
 </script>
 
@@ -51,6 +52,9 @@
 							<div class="size-1 rounded-full bg-accent"></div>
 						</div>
 						<div class="w-32 truncate">{theme}</div>
+						{#if theme === appState.theme}
+							<Check class="h-4 w-4" />
+						{/if}
 					</button>
 				</li>
 			{/each}
