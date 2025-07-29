@@ -6,6 +6,7 @@ class AppState {
 	#supabase: SupabaseClient;
 	#user: User | null = $state(null);
 	#theme: string = $state('light');
+	#pageTitle: string = $state('Trackit - Dashboard');
 
 	get user() {
 		return this.#user;
@@ -13,6 +14,14 @@ class AppState {
 
 	get theme() {
 		return this.#theme;
+	}
+
+	get pageTitle() {
+		return this.#pageTitle;
+	}
+
+	set pageTitle(pageTitle: string) {
+		this.#pageTitle = pageTitle;
 	}
 
 	constructor(supabase: SupabaseClient) {

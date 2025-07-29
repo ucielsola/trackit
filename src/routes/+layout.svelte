@@ -24,4 +24,8 @@
 	});
 </script>
 
+<svelte:head>
+	<title>TrackIt</title>
+</svelte:head>
+
 {@render children()}

@@ -1,18 +1,22 @@
 <script lang="ts">
 	import Clients from '$lib/components/Clients.svelte';
 	import CreateClient from '$lib/components/CreateClient.svelte';
+	import { getAppState } from '$lib/state/appState.svelte.js';
 	import { getClientsState } from '$lib/state/clientsState.svelte.js';
 	import { UserPlus } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
-	let { form } = $props();
-	let createClientModal: CreateClient;
-
 	const clientState = getClientsState();
+	const appState = getAppState();
+
+	let { form } = $props();
+
+	let createClientModal: CreateClient;
 	const openCreateClientModal = () => createClientModal?.showModal();
 
 	onMount(() => {
 		clientState.loadClients();
+		appState.pageTitle = 'TrackIt - Clients';
 	});
 </script>
 
