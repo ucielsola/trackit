@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Clients from '$lib/components/Clients.svelte';
+	import ClientsTable from '$lib/components/clients/ClientsTable.svelte';
 	import CreateClient from '$lib/components/CreateClient.svelte';
 	import { getAppState } from '$lib/state/appState.svelte.js';
 	import { getClientsState } from '$lib/state/clientsState.svelte.js';
@@ -29,7 +29,7 @@
 		</button>
 	</div>
 
-	<Clients />
+	<ClientsTable />
 
 	<CreateClient {form} bind:this={createClientModal} />
 </div>

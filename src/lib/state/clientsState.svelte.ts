@@ -1,12 +1,12 @@
 import { getContext, setContext } from 'svelte';
-import type { Client } from '$lib/types';
+import type { ClientWithStats } from '$lib/types';
 
 class ClientsState {
-	#clients: Client[] = $state<Client[]>([]);
-	#loaded: boolean = $state(false);
-	#loading: boolean = $state(false);
-	#error: string | null = $state<string | null>(null);
-	#success: string | null = $state<string | null>(null);
+	#clients = $state<ClientWithStats[]>([]);
+	#loaded = $state<boolean>(false);
+	#loading = $state<boolean>(false);
+	#error = $state<string | null>(null);
+	#success = $state<string | null>(null);
 
 	constructor() {}
 
@@ -49,7 +49,7 @@ class ClientsState {
 				throw new Error(`Failed to fetch clients: ${response.status} ${response.statusText}`);
 			}
 
-			const { clients }: { clients: Client[]; total: number } = await response.json();
+			const { clients }: { clients: ClientWithStats[]; total: number } = await response.json();
 
 			this.#clients = clients.sort((a, b) => a.name.localeCompare(b.name));
 			this.#loaded = true;
@@ -92,7 +92,7 @@ class ClientsState {
 		}
 	}
 
-	async updateClient(id: string, updates: Partial<Client>) {
+	async updateClient(id: string, updates: Partial<ClientWithStats>) {
 		this.#error = null;
 
 		const clientIndex = this.#clients.findIndex((c) => c.id === id);
