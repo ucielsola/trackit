@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ClientsTable from '$lib/components/clients/ClientsTable.svelte';
-	import CreateClient from '$lib/components/CreateClient.svelte';
+	import CreateClient from '$lib/components/clients/CreateClient.svelte';
 	import { getAppState } from '$lib/state/appState.svelte.js';
 	import { getClientsState } from '$lib/state/clientsState.svelte.js';
 	import { UserPlus } from '@lucide/svelte';
