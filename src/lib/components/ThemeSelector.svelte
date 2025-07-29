@@ -6,7 +6,7 @@
 	const appState = getAppState();
 
 	const onSetTheme = (theme: (typeof themes)[number]) => {
-		appState.setTheme(theme);
+		appState.updateTheme(theme);
 		(document.activeElement as HTMLElement)?.blur();
 	};
 </script>
