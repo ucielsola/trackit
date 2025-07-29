@@ -81,7 +81,7 @@
 
 {#snippet projectCountBadge(count: number)}
 	<div class="flex items-center pl-6">
-		<div class="badge badge-outline badge-sm badge-neutral">{count}</div>
+		<div class="badge badge-outline badge-sm badge-secondary">{count}</div>
 	</div>
 {/snippet}
 
@@ -101,7 +101,7 @@
 			>
 			<button
 				disabled={!!deleteClientId || !!editClientId}
-				class="btn btn-square btn-outline btn-primary"
+				class="btn btn-square btn-outline btn-error"
 				onclick={() => onClickDelete(client.id)}><Trash class="h-4 w-4" /></button
 			>
 		</div>
@@ -121,11 +121,11 @@
 		<div class="flex items-center justify-end gap-1">
 			<div class="badge text-sm font-bold whitespace-nowrap badge-warning">Are you sure?</div>
 
-			<button class="btn btn-square btn-outline btn-primary" onclick={onDelete}>
+			<button class="btn btn-square btn-outline btn-success" onclick={onDelete}>
 				<Check class="h-4 w-4" />
 			</button>
 			<button
-				class="btn btn-square btn-outline btn-primary"
+				class="btn btn-square btn-outline btn-error"
 				onclick={() => (deleteClientId = null)}
 			>
 				<X class="h-4 w-4" />
@@ -150,13 +150,13 @@
 	<td class="w-2/12">
 		<div class="flex w-full justify-end gap-1">
 			<button
-				class="btn btn-square btn-outline btn-primary"
+				class="btn btn-square btn-outline btn-success"
 				onclick={onSaveChanges}
 				disabled={newName.trim() === ''}
 			>
 				<Save class="h-4 w-4" />
 			</button>
-			<button class="btn btn-square btn-outline btn-primary" onclick={() => (editClientId = null)}>
+			<button class="btn btn-square btn-outline btn-error" onclick={() => (editClientId = null)}>
 				<X class="h-4 w-4" />
 			</button>
 		</div>
