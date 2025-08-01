@@ -95,24 +95,19 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	const path = event.url.pathname.replace(/\/+$/, '') || '/';
-
-	const isAuthPage = path === '/auth';
-	const isPrivatePage = path.startsWith('/private');
-	const isApiRoute = path.startsWith('/api/');
+	const isRoot = path === '/';
+	const isAuth = path === '/auth';
+	const isPrivate = path.startsWith('/private');
+	const isApi = path.startsWith('/api/');
 	const isProtectedApi = path.startsWith('/api/private/');
 
-	// 1. Rutas públicas de API → siempre pasan
-	if (isApiRoute && !isProtectedApi) {
-		return resolve(event);
-	}
+	if (isApi && !isProtectedApi) return resolve(event);
 
-	// 2. Rutas privadas (páginas o API protegidas) → requieren sesión
-	if (!session && (isPrivatePage || isProtectedApi)) {
+	if (!session && (isPrivate || isProtectedApi || isRoot)) {
 		throw redirect(303, '/auth');
 	}
 
-	// 3. Redirección: usuario autenticado que entra a página pública
-	if (session && !isPrivatePage && !isAuthPage && !isApiRoute) {
+	if (session && !isPrivate && !isApi && (!isAuth || isRoot)) {
 		throw redirect(303, '/private');
 	}
 
