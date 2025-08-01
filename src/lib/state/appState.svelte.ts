@@ -1,12 +1,14 @@
 import { goto } from '$app/navigation';
 import { getContext, setContext } from 'svelte';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
+import type { DrawerIds } from '$lib/types';
 
 class AppState {
 	#supabase: SupabaseClient;
-	#user: User | null = $state(null);
-	#theme: string = $state('light');
-	#pageTitle: string = $state('Trackit - Dashboard');
+	#user = $state<User | null>(null);
+	#theme: string = $state<string>('light');
+	#pageTitle = $state<string>('Trackit - Dashboard');
+	#drawerId = $state<DrawerIds | null>(null);
 
 	get user() {
 		return this.#user;
@@ -22,6 +24,14 @@ class AppState {
 
 	set pageTitle(pageTitle: string) {
 		this.#pageTitle = pageTitle;
+	}
+
+	get drawerId() {
+		return this.#drawerId;
+	}
+
+	set drawerId(drawerId: DrawerIds | null) {
+		this.#drawerId = drawerId;
 	}
 
 	constructor(supabase: SupabaseClient) {
@@ -65,7 +75,6 @@ class AppState {
 		await this.#supabase.auth.signOut();
 		goto(redirectTo);
 	}
-
 
 	setTheme(theme: string) {
 		this.#theme = theme;

@@ -2,11 +2,11 @@
 	import { fade } from 'svelte/transition';
 
 	import { Check, Info, Pencil, Save, Trash, X } from '@lucide/svelte';
-	
+
 	import { getClientsState } from '$lib/state';
-	
+
 	import { formatDateToLocalDMY } from '$lib/utils/formatDateToLocalDMY';
-	
+
 	import type { ClientWithStats } from '$lib/types';
 
 	const clientState = getClientsState();
@@ -67,10 +67,15 @@
 				</tr>
 			{:else}
 				<tr>
-					<td colspan="3">
+					<td colspan="5">
 						<div class="flex items-center justify-center gap-2">
-							<Info class="h-4 w-4" />
-							<span class="text-sm font-medium"> No clients found </span>
+							{#if clientState.loading && !clientState.loaded}
+								<span class="loading loading-spinner text-primary"></span>
+								<span class="text-sm font-medium"> Loading clients... </span>
+							{:else if clientState.loaded}
+								<Info class="h-4 w-4" />
+								<span class="text-sm font-medium"> No clients found </span>
+							{/if}
 						</div>
 					</td>
 				</tr>
@@ -124,10 +129,7 @@
 			<button class="btn btn-square btn-outline btn-success" onclick={onDelete}>
 				<Check class="h-4 w-4" />
 			</button>
-			<button
-				class="btn btn-square btn-outline btn-error"
-				onclick={() => (deleteClientId = null)}
-			>
+			<button class="btn btn-square btn-outline btn-error" onclick={() => (deleteClientId = null)}>
 				<X class="h-4 w-4" />
 			</button>
 		</div>

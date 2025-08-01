@@ -38,6 +38,10 @@ class ClientsState {
 		this.#success = value;
 	}
 
+	getClientById(id: string): ClientWithStats | null {
+		return this.#clients.find((c) => c.id === id) ?? null;
+	}
+
 	async loadClients() {
 		this.#loading = true;
 		this.#error = null;

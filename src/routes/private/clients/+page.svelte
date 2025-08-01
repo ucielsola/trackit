@@ -1,21 +1,20 @@
 <script lang="ts">
-	import ClientsTable from '$lib/components/clients/ClientsTable.svelte';
-	import CreateClient from '$lib/components/clients/CreateClient.svelte';
-	import { getAppState } from '$lib/state/appState.svelte.js';
-	import { getClientsState } from '$lib/state/clientsState.svelte.js';
-	import { UserPlus } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
-	const clientState = getClientsState();
+	import { UserPlus } from '@lucide/svelte';
+
+	import ClientsTable from '$lib/components/clients/ClientsTable.svelte';
+	import { getAppState } from '$lib/state';
+
+	import { DrawerIds } from '$lib/types';
+
 	const appState = getAppState();
 
-	let { form } = $props();
-
-	let createClientModal: CreateClient;
-	const openCreateClientModal = () => createClientModal?.showModal();
+	const openCreateClientModal = () => {
+		appState.drawerId = DrawerIds.CreateClient;
+	};
 
 	onMount(() => {
-		clientState.loadClients();
 		appState.pageTitle = 'TrackIt - Clients';
 	});
 </script>
@@ -30,6 +29,4 @@
 	</div>
 
 	<ClientsTable />
-
-	<CreateClient {form} bind:this={createClientModal} />
 </div>

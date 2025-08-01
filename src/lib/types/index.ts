@@ -10,20 +10,31 @@ export type EntryStatus = Database['public']['Enums']['entry_status'];
 export type ProjectWithEntries = Project & { entries: Entry[] };
 export type ClientWithProjects = Client & { projects: ProjectWithEntries[] };
 export type ClientWithStats = Client & {
-  project_count: number;
-  total_hours?: number;
-  total_revenue?: number;
+	project_count: number;
+	total_hours?: number;
+	total_revenue?: number;
 };
+
+export type ProjectWithStats = Project;
 
 // API types
 export type GetClientsResponse = {
-  clients: ClientWithStats[];
-  total: number;
+	clients: ClientWithStats[];
+	total: number;
 };
 
 export type CreateClientInput = {
-  name: string;
+	name: string;
 };
 
 // UI state types
 export type ModalState = 'open' | 'closed';
+
+export enum DrawerIds {
+	CreateProject = 'create-project',
+	UpdateProject = 'update-project',
+	CreateClient = 'create-client',
+	UpdateClient = 'update-client',
+	CreateEntry = 'create-entry',
+	UpdateEntry = 'update-entry'
+}

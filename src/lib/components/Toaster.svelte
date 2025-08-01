@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { uuidv7 } from 'uuidv7';
-	import { getClientsState } from '$lib/state';
+	import { getClientsState, getProjectsState } from '$lib/state';
 
 	type Toast = {
 		id: string;
@@ -9,6 +9,7 @@
 	};
 
 	const clientsState = getClientsState();
+	const projectsState = getProjectsState();
 
 	let toastQueue = $state<Toast[]>([]);
 
@@ -32,6 +33,16 @@
 		if (clientsState.success) {
 			createToast(clientsState.success, 'success');
 			clientsState.success = null;
+		}
+
+		if (projectsState.error) {
+			createToast(projectsState.error, 'error');
+			projectsState.error = null;
+		}
+
+		if (projectsState.success) {
+			createToast(projectsState.success, 'success');
+			projectsState.success = null;
 		}
 	});
 </script>

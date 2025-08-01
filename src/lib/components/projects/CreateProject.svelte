@@ -1,23 +1,31 @@
 <script lang="ts">
-	import { getClientsState, getAppState } from '$lib/state';
-	import { UserPlus } from '@lucide/svelte';
+	import { onMount } from 'svelte';
+	import { FolderOpenDot } from '@lucide/svelte';
+	import { getProjectsState, getAppState } from '$lib/state';
+	import ClientsDropdown from '$lib/components/clients/ClientsDropdown.svelte';
+
+	const appState = getAppState();
 
 	let creating = $state(false);
 	let error = $state<string | null>(null);
 	let success = $state(false);
 	let name = $state('');
+	let client = $state('');
+	let hourlyRate = $state('');
 	let nameInput: HTMLInputElement;
 
-	const appState = getAppState();
-	const clientState = getClientsState();
+	const projectState = getProjectsState();
 
 	const onSubmit = async (e: SubmitEvent) => {
 		e.preventDefault();
-
 		creating = true;
 		error = null;
 
-		await clientState.createClient(name?.trim() || '');
+		await projectState.createProject(
+			name?.trim() || '',
+			client?.trim() || '',
+			Number(hourlyRate) || 0 
+		);
 
 		creating = false;
 		closeDrawer();
@@ -27,19 +35,17 @@
 		appState.drawerId = null;
 	};
 
-	import { onMount } from 'svelte';
-
 	onMount(() => {
 		setTimeout(() => {
 			nameInput?.focus();
-		}, 100);
+		}, 500);
 	});
 </script>
 
 <div class="flex w-96 flex-1 flex-col gap-6">
 	<h3 class="flex items-center gap-2 text-xl font-bold">
-		<UserPlus class="w-6" />
-		Create client
+		<FolderOpenDot class="w-6" />
+		Create project
 	</h3>
 	<form class="flex flex-1 flex-col gap-2" onsubmit={onSubmit}>
 		<div class="flex flex-col gap-2">
@@ -50,19 +56,38 @@
 					disabled={creating}
 					type="text"
 					class="input w-full"
-					placeholder="Client name"
+					placeholder="Project name"
 					bind:value={name}
 					bind:this={nameInput}
 				/>
 			</label>
+
+			<ClientsDropdown name="client" bind:value={client} />
+
+			<label class="input">
+				<span class="label">Hourly rate</span>
+				<input
+					name="hourly_rate"
+					disabled={creating}
+					type="number"
+					min="0"
+					step="any"
+					class="input w-full"
+					placeholder="Hourly rate"
+					bind:value={hourlyRate}
+					inputmode="decimal"
+				/>
+			</label>
+
 			<div class="h-2">
 				{#if error}
 					<p class="text-xs text-red-500">{error}</p>
 				{:else if success}
-					<p class="text-xs text-green-600">Client created successfully!</p>
+					<p class="text-xs text-green-600">Project created successfully!</p>
 				{/if}
 			</div>
 		</div>
+
 		<div class="mt-auto flex justify-end gap-2">
 			<button
 				type="button"
@@ -73,7 +98,7 @@
 				Cancel
 			</button>
 			<button type="submit" class="btn btn-primary" disabled={creating || success}>
-				Create client
+				Create project
 			</button>
 		</div>
 	</form>

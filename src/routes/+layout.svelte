@@ -11,7 +11,7 @@
 	initializeApp();
 	const appState = getAppState();
 
-	appState.setUser(data.session?.user ?? null);
+	appState.setUser(data?.user ?? null);
 	appState.setTheme(data.cookies.find((cookie) => cookie.name === 'color-theme')?.value ?? 'light');
 
 	onMount(() => {
